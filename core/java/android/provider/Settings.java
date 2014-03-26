@@ -3120,6 +3120,7 @@ public final class Settings {
          public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
 
         /**
+<<<<<<< HEAD
          * Override and forcefully disable the fullscreen keyboard
          * @hide
          */
@@ -3234,9 +3235,24 @@ public final class Settings {
          * 1 = Display down-stream traffic if set
          * 2 = Show as Byte/s if set
          * 16-31 = Refresh interval(ms) min: 250 max: 32750 default: 1000
+        */
+
+        public static final String NETWORK_TRAFFIC_STATE = "network_traffic_state";
+
+
+        /**
+         * Whether to enable voice wakeup.  The value is boolean (1 or 0).
          * @hide
          */
-        public static final String NETWORK_TRAFFIC_STATE = "network_traffic_state";
+        public static final String VOICE_WAKEUP = "voice_wakeup";
+
+        /**
+         * An intent (a flattened Uri String) to launch when user voice launch
+         * action is detected. An empty or null string will launch the default
+         * voice search activity.
+         * @hide
+         */
+        public static final String VOICE_LAUNCH_INTENT = "voice_launch_intent";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
