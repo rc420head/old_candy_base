@@ -715,7 +715,6 @@ public class RecentPanelView {
                     // Save the first task for later use.
                     mFirstTask = item;
                 }
-
                 if (i > 0 || showTopmost) {
                     // FirstExpandedItems value forces to show always the app screenshot
                     // if the old state is not known and the user has set expanded mode to auto.

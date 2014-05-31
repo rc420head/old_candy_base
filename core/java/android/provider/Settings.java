@@ -3977,6 +3977,13 @@ public final class Settings {
          */
         public static final String RECENT_PANEL_EXPANDED_MODE = "recent_panel_expanded_mode";
 
+         /* 
+         *Recent panel: Show topmost task
+         *
+         * @hide
+         */
+        public static final String RECENT_PANEL_SHOW_TOPMOST = "recent_panel_show_topmost";
+
         /**
          * Recent panel: Show topmost task
          *
@@ -4044,6 +4051,7 @@ public final class Settings {
          */
         public static final String HOVER_STATE = "hover_state";
 
+        /*
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
