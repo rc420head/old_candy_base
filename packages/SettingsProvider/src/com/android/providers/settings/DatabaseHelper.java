@@ -2010,8 +2010,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             loadSetting(stmt, Settings.System.TTY_MODE, 0);
 
             // Set default noise suppression value
-            loadBooleanSetting(stmt, Settings.System.NOISE_SUPPRESSION,
-                    R.bool.def_noise_suppression);
+            loadSetting(stmt, Settings.System.NOISE_SUPPRESSION, 0);
 
             loadIntegerSetting(stmt, Settings.System.SCREEN_BRIGHTNESS,
                     R.integer.def_screen_brightness);
