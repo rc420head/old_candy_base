@@ -200,12 +200,6 @@ public class WallpaperCropActivity extends Activity {
                         cropImageAndSetWallpaper(imageUri, null, finishActivityWhenDone);
                     }
                 });
-<<<<<<< HEAD
-
-        mSetWallpaperButton = findViewById(R.id.set_wallpaper_button);
-        mSetWallpaperButton = findViewById(R.id.set_wallpaper_button);
-=======
->>>>>>> a37bee2... fix wallpapercropper fc
     }
 
     public boolean enableRotation() {
@@ -692,12 +686,8 @@ public class WallpaperCropActivity extends Activity {
                         BitmapFactory.Options options = new BitmapFactory.Options();
                         if (scaleDownSampleSize > 1) {
                             options.inSampleSize = scaleDownSampleSize;
-<<<<<<< HEAD
-                        }          
-=======
                         }
                         fullSize = BitmapFactory.decodeStream(mInStream, null, options);
->>>>>>> a37bee2... fix wallpapercropper fc
                     }
                     if (fullSize != null) {
                         mCropBounds.left /= scaleDownSampleSize;
