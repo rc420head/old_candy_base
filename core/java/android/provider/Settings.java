@@ -3133,6 +3133,12 @@ public final class Settings {
 
 
 
+          /**
+       * Height of navigation bar buttons
+       * @hide
+       */
+        public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
+
         /**
           * Volume keys control cursor in text fields (default is 0)
           * 0 - Disabled
