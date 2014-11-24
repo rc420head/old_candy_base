@@ -17,13 +17,18 @@
 package com.android.systemui.statusbar.phone;
 
 import android.animation.LayoutTransition;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
 import android.content.res.Configuration;
+import android.database.ContentObserver;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Handler;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -32,6 +37,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.systemui.BatteryMeterView;
@@ -50,6 +56,10 @@ public class KeyguardStatusBarView extends RelativeLayout
     private boolean mKeyguardUserSwitcherShowing;
     private boolean mBatteryListening;
 
+    private boolean mShowBattreryPercent;
+    private boolean mShowCarrierLabel;
+
+    private LinearLayout mCarrierLabel;
     private View mSystemIconsSuperContainer;
     private MultiUserSwitch mMultiUserSwitch;
     private ImageView mMultiUserAvatar;
@@ -61,6 +71,9 @@ public class KeyguardStatusBarView extends RelativeLayout
     private int mSystemIconsSwitcherHiddenExpandedMargin;
     private Interpolator mFastOutSlowInInterpolator;
 
+    private Handler mHandler = new Handler();
+    private SettingsObserver mSettingsObserver;
+
     private boolean mShow;
 
     private ContentObserver mObserver = new ContentObserver(new Handler()) {
@@ -71,6 +84,7 @@ public class KeyguardStatusBarView extends RelativeLayout
 
     public KeyguardStatusBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mSettingsObserver = new SettingsObserver(mHandler);
         loadShowBatteryTextSetting();
     }
 
@@ -86,6 +100,7 @@ public class KeyguardStatusBarView extends RelativeLayout
         mMultiUserSwitch = (MultiUserSwitch) findViewById(R.id.multi_user_switch);
         mMultiUserAvatar = (ImageView) findViewById(R.id.multi_user_avatar);
         mBatteryLevel = (TextView) findViewById(R.id.battery_level);
+        mCarrierLabel = (LinearLayout) findViewById(R.id.keyguard_carrier_text);
         loadDimens();
         mFastOutSlowInInterpolator = AnimationUtils.loadInterpolator(getContext(),
                 android.R.interpolator.fast_out_slow_in);
@@ -116,6 +131,7 @@ public class KeyguardStatusBarView extends RelativeLayout
             removeView(mMultiUserSwitch);
         }
         mBatteryLevel.setVisibility((mBatteryCharging || mShow) ? View.VISIBLE : View.GONE);
+        mCarrierLabel.setVisibility(mShowCarrierLabel ? View.VISIBLE : View.GONE);
     }
 
     private void updateSystemIconsLayoutParams() {
@@ -240,6 +256,7 @@ public class KeyguardStatusBarView extends RelativeLayout
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
+        mSettingsObserver.observe();
         if (visibility != View.VISIBLE) {
             mSystemIconsSuperContainer.animate().cancel();
             mMultiUserSwitch.animate().cancel();
@@ -252,6 +269,39 @@ public class KeyguardStatusBarView extends RelativeLayout
         return false;
     }
 
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LOCK_SCREEN_SHOW_BATTERY_PERCENT), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LOCK_SCREEN_SHOW_CARRIER), false, this);
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            update();
+        }
+
+        public void update() {
+            ContentResolver resolver = mContext.getContentResolver();
+            mShowBattreryPercent = Settings.System.getInt(
+                    resolver, Settings.System.LOCK_SCREEN_SHOW_BATTERY_PERCENT, 0) != 0;
+            mShowCarrierLabel = Settings.System.getInt(
+                    resolver, Settings.System.LOCK_SCREEN_SHOW_CARRIER, 0) != 0;
+            updateVisibilities();
+        }
+    }
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();

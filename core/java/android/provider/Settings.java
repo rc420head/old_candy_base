@@ -256,7 +256,6 @@ public final class Settings {
      * Input: Nothing.
      * <p>
      * Output: Nothing.
-
      */
     @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
     public static final String ACTION_WIFI_SETTINGS =
@@ -3118,6 +3117,18 @@ public final class Settings {
           * @hide
           */
          public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
+
+        /**
+         * Lock Screen battery %
+         * @hide
+         */
+        public static final String LOCK_SCREEN_SHOW_BATTERY_PERCENT = "lock_screen_show_battery_percent";
+
+        /**
+         * Lock Screen carrier
+         * @hide
+         */
+        public static final String LOCK_SCREEN_SHOW_CARRIER = "lock_screen_show_carrier";
 
         /**
          * Override and forcefully disable the fullscreen keyboard
