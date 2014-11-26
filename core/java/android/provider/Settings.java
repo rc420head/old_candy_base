@@ -3145,6 +3145,19 @@ public final class Settings {
        */
         public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
 
+           /**
+       * show clear all recents button
+       * @hide
+       */
+        public static final String SHOW_CLEAR_ALL_RECENTS = "show_clear_all_recents";
+
+       /**
+       * location of the clear all rectents button
+       * @hide
+       */
+        public static final String RECENTS_CLEAR_ALL_LOCATION = "recents_clear_all_location";
+
+
         /**
           * Volume keys control cursor in text fields (default is 0)
           * 0 - Disabled
