@@ -500,7 +500,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             } else {
                 removeNavigationBar();
             }
-        }
+       }
     }
 
     private void forceAddNavigationBar() {
