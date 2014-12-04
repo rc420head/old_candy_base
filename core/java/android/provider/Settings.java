@@ -3086,11 +3086,6 @@ public final class Settings {
          */
         public static final String EGG_MODE = "egg_mode";
 
-        /**
-         * Status bar battery %
-         * @hide
-         */
-        public static final String STATUS_BAR_SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
 
         /**
          *  Enable statusbar double tap gesture on to put device to sleep
@@ -3113,17 +3108,6 @@ public final class Settings {
          */
         public static final String DISABLE_FULLSCREEN_KEYBOARD = "disable_fullscreen_keyboard";
 
-        /**
-         * Whether to show the IME switcher in the status bar
-         * @hide
-         */
-        public static final String STATUS_BAR_IME_SWITCHER = "status_bar_ime_switcher";
-
-        /**
-         * Automatic keyboard rotation timeout.  0 to disable completely.
-         * @hide
-         */
-        public static final String KEYBOARD_ROTATION_TIMEOUT = "keyboard_rotation_timeout";
 
         /**
          * Forces formal text input.  1 to replace emoticon key with enter key.
@@ -3220,15 +3204,6 @@ public final class Settings {
 
         public static final String STATUSBAR_CLOCK_FONT_STYLE = "statusbar_clock_font_style";
 
-
-        /**
-          * Volume keys control cursor in text fields (default is 0)
-          * 0 - Disabled
-          * 1 - Volume up/down moves cursor left/right
-          * 2 - Volume up/down moves cursor right/left
-          * @hide
-          */
-         public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
 
        /**
          * Network traffic indicator, goes from least to greatest significant bitwise
