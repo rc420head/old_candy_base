@@ -1623,8 +1623,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 updateWakeGestureListenerLp();
             }
 
-            updateKeyAssignments();
-
             final boolean useEdgeService = Settings.System.getIntForUser(resolver,
                     Settings.System.USE_EDGE_SERVICE_FOR_GESTURES, 1, UserHandle.USER_CURRENT) == 1;
             if (useEdgeService ^ mUsingEdgeGestureServiceForGestures && mSystemReady) {
@@ -1644,6 +1642,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 mDevForceNavbar = devForceNavbar;
             }
 
+              updateKeyAssignments();
+
              // navigation bar custom height
             int mNavigationBarHeight = Settings.System.getInt(resolver,
                 Settings.System.NAVIGATION_BAR_HEIGHT, 48);
@@ -1659,6 +1659,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                mNavigationBarWidthForRotation[mSeascapeRotation] =
               (mNavigationBarHeight - 6) * DisplayMetrics.DENSITY_DEVICE/     DisplayMetrics.DENSITY_DEFAULT;
 
+       
             // Configure rotation lock.
             int userRotation = Settings.System.getIntForUser(resolver,
                     Settings.System.USER_ROTATION, Surface.ROTATION_0,
