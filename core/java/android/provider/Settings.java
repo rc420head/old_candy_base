@@ -3181,7 +3181,7 @@ public final class Settings {
        */
         public static final String VOLUME_MUSIC_CONTROLS = "volume_music_controls";
 
-+       /**
+       /**
        * Height of navigation bar buttons
        * @hide
        */
