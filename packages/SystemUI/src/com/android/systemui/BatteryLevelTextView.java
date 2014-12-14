@@ -1,5 +1,7 @@
 package com.android.systemui;
 
+import android.app.ActivityManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.net.Uri;
@@ -12,6 +14,10 @@ import com.android.systemui.statusbar.policy.BatteryController;
 
 public class BatteryLevelTextView extends TextView implements
         BatteryController.BatteryStateChangeCallback{
+
+    private static final String STATUS_BAR_BATTERY_STYLE = "status_bar_battery_style";
+    private static final String STATUS_BAR_SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
+
     private BatteryController mBatteryController;
     private boolean mShow;
 
@@ -29,8 +35,52 @@ public class BatteryLevelTextView extends TextView implements
     }
 
     private void loadShowBatteryTextSetting() {
-        mShow = 0 != Settings.System.getInt(
-            getContext().getContentResolver(), Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT, 0);
+        //mShow = 2 == Settings.System.getInt(getContext().getContentResolver(),
+        //        Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT, 0);
+
+        ContentResolver resolver = getContext().getContentResolver();
+        int currentUserId = ActivityManager.getCurrentUser();
+
+        boolean showInsidePercent = Settings.System.getIntForUser(resolver,
+                Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT, 0, currentUserId) == 1;
+
+        boolean showNextPercent = Settings.System.getIntForUser(resolver,
+                Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT, 0, currentUserId) == 2;
+
+        int batteryStyle = Settings.System.getIntForUser(resolver,
+                Settings.System.STATUS_BAR_BATTERY_STYLE, 0, currentUserId);
+        switch (batteryStyle) {
+            case 2:
+                //meterMode = BatteryMeterMode.BATTERY_METER_CIRCLE;
+                showNextPercent = showNextPercent;
+                break;
+
+            case 4:
+                //meterMode = BatteryMeterMode.BATTERY_METER_GONE;
+                showNextPercent = false;
+                break;
+
+            case 5:
+                //meterMode = BatteryMeterMode.BATTERY_METER_ICON_LANDSCAPE;
+                showNextPercent = showNextPercent;
+                break;
+
+            case 6:
+                //meterMode = BatteryMeterMode.BATTERY_METER_TEXT;
+                showNextPercent = true;
+                break;
+
+            default:
+                break;
+        }
+
+        setShowPercent(showNextPercent);
+
+    }
+
+    public void setShowPercent(boolean show) {
+        mShow = show;
+        setVisibility(mShow ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -52,7 +102,9 @@ public class BatteryLevelTextView extends TextView implements
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         getContext().getContentResolver().registerContentObserver(Settings.System.getUriFor(
-           Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT), false, mObserver);
+                STATUS_BAR_BATTERY_STYLE), false, mObserver);
+        getContext().getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                STATUS_BAR_SHOW_BATTERY_PERCENT), false, mObserver);
     }
 
     @Override
