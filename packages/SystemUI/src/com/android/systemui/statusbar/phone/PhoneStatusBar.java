@@ -402,6 +402,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     int mInitialTouchX;
     int mInitialTouchY;
 
+    private int mBatterySaverWarningColor;
     // for disabling the status bar
     int mDisabled = 0;
 
@@ -442,6 +443,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.HEADS_UP_SNOOZE_TIME),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.BATTERY_SAVER_MODE_COLOR),
                     false, this, UserHandle.USER_ALL);
             //resolver.registerContentObserver(Settings.System.getUriFor(
             //        Settings.System.STATUS_BAR_BATTERY_STYLE), false, this);
@@ -484,6 +488,16 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                              mContext.getResources().getBoolean(R.bool.enable_ticker)
                           ? 1 : 0, UserHandle.USER_CURRENT) == 1;
                   initTickerView();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.BATTERY_SAVER_MODE_COLOR))) {
+                    mBatterySaverWarningColor = Settings.System.getIntForUser(
+                            mContext.getContentResolver(),
+                            Settings.System.BATTERY_SAVER_MODE_COLOR, -2,
+                            UserHandle.USER_CURRENT);
+                    if (mBatterySaverWarningColor == -2) {
+                        mBatterySaverWarningColor = mContext.getResources()
+                                .getColor(com.android.internal.R.color.battery_saver_mode_color);
+                    }
             }
             update();
         }
@@ -506,10 +520,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
           /*
             boolean showInsidePercent = Settings.System.getIntForUser(resolver,
                     Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT, 0, mCurrentUserId) == 1;
-
             //boolean showNextPercent = Settings.System.getIntForUser(resolver,
             //        Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT, 0, mCurrentUserId) == 2;
-
             int batteryStyle = Settings.System.getIntForUser(resolver,
                     Settings.System.STATUS_BAR_BATTERY_STYLE, 0, mCurrentUserId);
             BatteryMeterMode meterMode = BatteryMeterMode.BATTERY_METER_ICON_PORTRAIT;
@@ -517,26 +529,21 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 case 2:
                     meterMode = BatteryMeterMode.BATTERY_METER_CIRCLE;
                     break;
-
                 case 4:
                     meterMode = BatteryMeterMode.BATTERY_METER_GONE;
                     //showNextPercent = false;
                     break;
-
                 case 5:
                     meterMode = BatteryMeterMode.BATTERY_METER_ICON_LANDSCAPE;
                     break;
-
                 case 6:
                     meterMode = BatteryMeterMode.BATTERY_METER_TEXT;
                     showInsidePercent = false;
                     //showNextPercent = true;
                     break;
-
                 default:
                     break;
             }
-
             // Update Battery
             mBatteryView.setMode(meterMode);
             mBatteryView.setShowPercent(showInsidePercent);
@@ -1022,6 +1029,15 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         initTickerView();
 
         mEdgeBorder = res.getDimensionPixelSize(R.dimen.status_bar_edge_ignore);
+
+        mBatterySaverWarningColor = Settings.System.getIntForUser(
+                mContext.getContentResolver(),
+                Settings.System.BATTERY_SAVER_MODE_COLOR, -2,
+                UserHandle.USER_CURRENT);
+        if (mBatterySaverWarningColor == -2) {
+            mBatterySaverWarningColor = mContext.getResources()
+                   .getColor(com.android.internal.R.color.battery_saver_mode_color);
+        }
 
         // set the inital view visibility
         setAreThereNotifications();
@@ -3166,6 +3182,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 && !powerSave;
         if (powerSave && getBarState() == StatusBarState.SHADE) {
             mode = MODE_WARNING;
+        }
+        if (mode == MODE_WARNING) {
+            transitions.setWarningColor(mBatterySaverWarningColor);
         }
         transitions.transitionTo(mode, anim);
     }
