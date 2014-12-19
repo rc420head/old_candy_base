@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2014 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +20,11 @@ package com.android.systemui.statusbar.phone;
 import android.animation.LayoutTransition;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.database.ContentObserver;
-import android.net.Uri;
-import android.os.Handler;
-import android.provider.Settings;
-import android.content.res.Configuration;
-import android.database.ContentObserver;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
@@ -53,7 +47,6 @@ import com.android.systemui.statusbar.policy.UserInfoController;
 public class KeyguardStatusBarView extends RelativeLayout
         implements BatteryController.BatteryStateChangeCallback {
 
-    private boolean mBatteryCharging;
     private boolean mKeyguardUserSwitcherShowing;
     private boolean mBatteryListening;
 
@@ -72,27 +65,12 @@ public class KeyguardStatusBarView extends RelativeLayout
     private int mSystemIconsSwitcherHiddenExpandedMargin;
     private Interpolator mFastOutSlowInInterpolator;
 
+
     private Handler mHandler = new Handler();
-    private SettingsObserver mSettingsObserver;
-
-    private boolean mShowBatteryText;
-
-    private ContentObserver mObserver = new ContentObserver(new Handler()) {
-    public void onChange(boolean selfChange, Uri uri) {
-         loadShowBatteryTextSetting();
-     updateVisibilities();
-       }
-    };
 
     public KeyguardStatusBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mSettingsObserver = new SettingsObserver(mHandler);
-        loadShowBatteryTextSetting();
-    }
 
-    private void loadShowBatteryTextSetting() {
-       mShowBatteryText = 2 == Settings.System.getInt(getContext().getContentResolver(),
-              Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT, 0);
     }
 
     @Override
@@ -110,15 +88,6 @@ public class KeyguardStatusBarView extends RelativeLayout
         updateUserSwitcher();
     }
 
-    @Override
-    protected void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // Respect font size setting.
-        //mBatteryLevel.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-        //        getResources().getDimensionPixelSize(R.dimen.battery_level_text_size));
-    }
-
     private void loadDimens() {
         mSystemIconsSwitcherHiddenExpandedMargin = getResources().getDimensionPixelSize(
                 R.dimen.system_icons_switcher_hidden_expanded_margin);
@@ -134,10 +103,10 @@ public class KeyguardStatusBarView extends RelativeLayout
             removeView(mMultiUserSwitch);
         }
 
+
         mCarrierLabel.setVisibility(mShowCarrierLabel ? View.VISIBLE : View.GONE);
 
-        mBatteryLevel.setShowPercent(
-                (mBatteryCharging || mShowBatteryText) ? true : false);
+        mBatteryLevel.setVisibility(View.VISIBLE);
     }
 
     private void updateSystemIconsLayoutParams() {
@@ -172,6 +141,7 @@ public class KeyguardStatusBarView extends RelativeLayout
     public void setBatteryController(BatteryController batteryController) {
         mBatteryController = batteryController;
         ((BatteryMeterView) findViewById(R.id.battery)).setBatteryController(batteryController);
+        mBatteryLevel.setBatteryController(batteryController);
     }
 
     public void setUserInfoController(UserInfoController userInfoController) {
@@ -185,12 +155,7 @@ public class KeyguardStatusBarView extends RelativeLayout
 
     @Override
     public void onBatteryLevelChanged(int level, boolean pluggedIn, boolean charging) {
-        //mBatteryLevel.setText(getResources().getString(R.string.battery_level_template, level));
-        boolean changed = mBatteryCharging != charging;
-        mBatteryCharging = charging;
-        if (changed) {
-            updateVisibilities();
-        }
+        // could not care less
     }
 
     @Override
@@ -262,7 +227,6 @@ public class KeyguardStatusBarView extends RelativeLayout
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
-        mSettingsObserver.observe();
         if (visibility != View.VISIBLE) {
             mSystemIconsSuperContainer.animate().cancel();
             mMultiUserSwitch.animate().cancel();
@@ -273,53 +237,5 @@ public class KeyguardStatusBarView extends RelativeLayout
     @Override
     public boolean hasOverlappingRendering() {
         return false;
-    }
-
-    class SettingsObserver extends ContentObserver {
-        SettingsObserver(Handler handler) {
-            super(handler);
-        }
-
-        void observe() {
-            ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.LOCK_SCREEN_SHOW_BATTERY_PERCENT), false, this);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.LOCK_SCREEN_SHOW_CARRIER), false, this);
-            update();
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            update();
-        }
-
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            update();
-        }
-
-        public void update() {
-            ContentResolver resolver = mContext.getContentResolver();
-            mShowBattreryPercent = Settings.System.getInt(
-                    resolver, Settings.System.LOCK_SCREEN_SHOW_BATTERY_PERCENT, 0) != 0;
-            mShowCarrierLabel = Settings.System.getInt(
-                    resolver, Settings.System.LOCK_SCREEN_SHOW_CARRIER, 0) != 0;
-            updateVisibilities();
-        }
-    }
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        getContext().getContentResolver().registerContentObserver(Settings.System.getUriFor(
-               "status_bar_show_battery_percent"), false, mObserver);
-   }
-    @Override
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-
-        if (mBatteryController != null) {
-            mBatteryController.removeStateChangedCallback(this);
-        }
     }
 }
