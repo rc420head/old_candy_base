@@ -167,7 +167,7 @@ import android.system.ErrnoException;
 import android.system.Os;
 import android.system.StructStat;
 import android.text.TextUtils;
-import android.text.format.DateUtils
+import android.text.format.DateUtils;
 import android.util.ArraySet;
 import android.util.AtomicFile;
 import android.util.DisplayMetrics;
@@ -4601,7 +4601,8 @@ public class PackageManagerService extends IPackageManager.Stub {
                         }
                         ms.runMaintenance();
                     }
-                }+            } else {
+                }
+             } else {
                 Slog.e(TAG, "Mount service unavailable!");
             }
         } catch (RemoteException e) {
