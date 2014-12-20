@@ -546,14 +546,20 @@ public class NavigationBarView extends LinearLayout {
                 setVisibleOrInvisible(getRightLayoutButton(), allowLayoutArrows);
             }
         } else if (mButtonLayouts == 1) {
-            if (mLegacyMenu && mImeLayout) {
-				// show hard-coded switchers here when written
-				if (getImeSwitchButton() != null) getImeSwitchButton()
-						.setVisibility(showingIME ? View.VISIBLE : View.INVISIBLE);
-				if (getImeLayoutChanger() != null) getImeLayoutChanger()
-						.setVisibility(showingIME ? View.VISIBLE : View.INVISIBLE);
+
+            if (mLegacyMenu) {
+                if (mImeLayout) {
+                    // show hard-coded switchers here when written
+                    if (getButtonView(ACTION_IME) != null)
+                        getButtonView(ACTION_IME).setVisibility(showingIME ? View.VISIBLE : View.INVISIBLE);
+                    if (getButtonView(ACTION_IME_LAYOUT) != null) getButtonView(ACTION_IME_LAYOUT)
+                        .setVisibility(showingIME ? View.VISIBLE : View.INVISIBLE);
+                } else {
+                    if (getButtonView(ACTION_MENU) != null) getButtonView(ACTION_MENU)
+                        .setVisibility(mShowMenu ? View.VISIBLE : View.INVISIBLE);
+                }
             }
-		}
+        }
     }
 
     private void setVisibleOrInvisible(View view, boolean visible) {
@@ -598,13 +604,17 @@ public class NavigationBarView extends LinearLayout {
                 ((mNavigationIconHints & StatusBarManager.NAVIGATION_HINT_IME_SHOWN) == 0);
 
         if (mLegacyMenu && !showingIME) {
-            if (getRightLayoutButton() != null) {
-                ((LayoutChangerButtonView) getRightLayoutButton()).setMenuAction(
-                        shouldShow, getResources().getConfiguration().orientation, mTablet);
-            } else if (getMenuButton() != null) {
-                ((LayoutChangerButtonView) getMenuButton()).setMenuAction(
-                        shouldShow, getResources().getConfiguration().orientation, mTablet);
-            }
+			if (mButtonLayouts != 1) {
+                if (getButtonView(ACTION_LAYOUT_RIGHT) != null) {
+                    ((LayoutChangerButtonView) getButtonView(ACTION_LAYOUT_RIGHT)).setMenuAction(
+                            shouldShow, getResources().getConfiguration().orientation, mTablet);
+                } else if (getButtonView(ACTION_MENU) != null) {
+                    ((LayoutChangerButtonView) getButtonView(ACTION_MENU)).setMenuAction(
+                            shouldShow, getResources().getConfiguration().orientation, mTablet);
+                }
+            } else {
+                if (!mImeLayout && (getButtonView(ACTION_MENU) != null)) setVisibleOrInvisible(getButtonView(ACTION_MENU), mShowMenu);
+			}
         }
     }
 
@@ -791,17 +801,17 @@ public class NavigationBarView extends LinearLayout {
             // single layout: legacy menu button/AOSP spacing on right side
             if (mLegacyMenu && mButtonLayouts == 1) {
                 info = new KeyButtonInfo(mImeLayout
-					   ? mShowMenu
-								? NavbarConstant.ACTION_MENU.value()
-								: NavbarConstant.ACTION_IME.value()
-					   : NavbarConstant.ACTION_MENU.value());
+                                    ? mShowMenu
+                                        ? ACTION_MENU
+                                        : ACTION_IME
+                                    : ACTION_MENU);
                 changer = new LayoutChangerButtonView(mContext, null);
                 changer.setButtonActions(info);
                 changer.setImageResource(mImeLayout
-						? mShowMenu
-								? R.drawable.ic_sysbar_menu
-								: R.drawable.ic_ime_switcher_default
-						: R.drawable.ic_sysbar_menu);
+                                   ? mShowMenu
+                                        ? R.drawable.ic_sysbar_menu
+                                        : R.drawable.ic_ime_switcher_default
+                                        : R.drawable.ic_sysbar_menu);
                 changer.setLayoutParams(getLayoutParams(landscape, mTablet ? mMenuButtonWidth : separatorSize, 0f));
                 changer.setVisibility(mShowMenu || (mImeLayout && showingIME) ? View.VISIBLE : View.INVISIBLE);
 
