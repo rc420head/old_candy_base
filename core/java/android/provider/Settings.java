@@ -3249,13 +3249,6 @@ public final class Settings {
          * @hide
          */
         public static final String FORMAL_TEXT_INPUT = "formal_text_input";
-        
-         /**
-         * Volume rocker wake
-         * @hide
-         */
-        public static final String VOLUME_WAKE_SCREEN = "volume_wake_screen";
-
 
          /**
        * Volume music controls
