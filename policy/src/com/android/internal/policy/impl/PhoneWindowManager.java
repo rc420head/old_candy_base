@@ -1711,7 +1711,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                  mNavigationBarWidth = Converter.dpToPx(mContext, mNavigationBarWidth);
               }
             if (!hasNavigationBar()) {
-            ....
+       
           // Set the navigation bar's dimensions to 0
                mNavigationBarWidthForRotation[mPortraitRotation]
                   = mNavigationBarWidthForRotation[mUpsideDownRotation]
