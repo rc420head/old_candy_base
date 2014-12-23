@@ -2347,9 +2347,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             loadIntegerSetting(stmt, Settings.System.DEV_FORCE_SHOW_NAVBAR,
                     R.integer.def_force_disable_navkeys);
 
-            loadBooleanSetting(stmt, Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT,
-                    R.bool.def_status_bar_show_battery_percent);
-
             loadIntegerSetting(stmt, Settings.System.STATUS_BAR_NOTIF_COUNT,
                     R.integer.def_notif_count);
 
