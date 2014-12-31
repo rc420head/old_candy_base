@@ -5110,23 +5110,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     }
                 }
 
-
-
-                if (isMusicActive() && (result & ACTION_PASS_TO_USER) == 0) {
-                    if (mVolBtnMusicControls && down && (keyCode != KeyEvent.KEYCODE_VOLUME_MUTE)) {
-                        mIsLongPress = false;
-                        int newKeyCode = event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP ?
-                                KeyEvent.KEYCODE_MEDIA_NEXT : KeyEvent.KEYCODE_MEDIA_PREVIOUS;
-                        Message msg = mHandler.obtainMessage(MSG_DISPATCH_VOLKEY_WITH_WAKE_LOCK,
-                                new KeyEvent(event.getDownTime(), event.getEventTime(), event.getAction(), newKeyCode, 0));
-                        msg.setAsynchronous(true);
-                        mHandler.sendMessageDelayed(msg, ViewConfiguration.getLongPressTimeout());
-                        break;
-
-                    } else {
-                        if (mVolBtnMusicControls && !down) {
-                            mHandler.removeMessages(MSG_DISPATCH_VOLKEY_WITH_WAKE_LOCK);
-                            if (mIsLongPress) {
                 // Disable music and volume control when used as wake key
                 if ((result & ACTION_PASS_TO_USER) == 0 && !mVolumeWakeScreen) {
                     boolean mayChangeVolume = false;
@@ -5172,14 +5155,14 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     break;
                 }
                 break;
-            }
+             }
 
-            case KeyEvent.KEYCODE_HOME:
-                if (down && !interactive && mHomeWakeScreen) {
-                    isWakeKey = true;
-                }
-                break;
-
+             case KeyEvent.KEYCODE_HOME:
+                 if (down && !interactive && mHomeWakeScreen) {
+                     isWakeKey = true;
+                 }
+                 break;
+                 
             case KeyEvent.KEYCODE_ENDCALL: {
                 result &= ~ACTION_PASS_TO_USER;
                 if (down) {
