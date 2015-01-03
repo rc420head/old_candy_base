@@ -540,14 +540,7 @@ public class NavigationBarView extends LinearLayout {
 
         mBarTransitions.applyBackButtonQuiescentAlpha(mBarTransitions.getMode(), true /*animate*/);
 
-        if (mButtonLayouts > 1) {
-            if (!mImeLayout) {
-                final boolean allowLayoutArrows = !disableHome && !showingIME;
-                setVisibleOrInvisible(getLeftLayoutButton(), allowLayoutArrows);
-                setVisibleOrInvisible(getRightLayoutButton(), allowLayoutArrows);
-            }
-        } else if (mButtonLayouts == 1) {
-
+        if (mButtonLayouts == 1) {
             if (mLegacyMenu) {
                 if (mImeLayout) {
                     // show hard-coded switchers here when written
