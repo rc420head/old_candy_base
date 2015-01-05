@@ -3478,6 +3478,7 @@ public final class Settings {
          */
         public static final String VOICE_LAUNCH_INTENT = "voice_launch_intent";
 
+
         /**
          * Whether to use gesture anywhere feature.
          * @hide
