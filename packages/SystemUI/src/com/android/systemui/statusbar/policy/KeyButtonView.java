@@ -64,7 +64,7 @@ import com.android.internal.util.vanir.NavbarConstants.NavbarConstant;
 import com.android.internal.util.vanir.NavbarUtils;
 import com.android.internal.util.vanir.VanirActions;
 import com.android.systemui.R;
-import com.vanir.util.DeviceUtils;
+import com.android.internal.util.candy.DeviceUtils;
 
 import static android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK;
 import static android.view.accessibility.AccessibilityNodeInfo.ACTION_LONG_CLICK;
