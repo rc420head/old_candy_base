@@ -120,7 +120,6 @@ import com.android.internal.util.gesture.EdgeGesturePosition;
 import com.android.internal.util.gesture.EdgeServiceConstants;
 import com.android.internal.widget.PointerLocationView;
 import com.android.server.LocalServices;
-import com.android.internal.util.candy.Converter;
 
 import java.io.File;
 import java.io.FileReader;
@@ -756,15 +755,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.System.DEV_FORCE_SHOW_NAVBAR), false, this,
                     UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.NAVIGATION_BAR_HEIGHT), false, this,
-                    UserHandle.USER_ALL);
-           resolver.registerContentObserver(Settings.System.getUriFor(
-                   Settings.System.NAVIGATION_BAR_WIDTH), false, this,
-                    UserHandle.USER_ALL);  
-           resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.NAVIGATION_BAR_HEIGHT_LANDSCAPE), false, this,
-                    UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.BACK_WAKE_SCREEN), false, this,
                     UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -776,7 +766,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
            resolver.registerContentObserver(Settings.System.getUriFor(        
                     Settings.System.VOLBTN_MUSIC_CONTROLS), false, this,
                     UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
+           resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.ACCELEROMETER_ROTATION_ANGLES), false, this,
                     UserHandle.USER_ALL);
            resolver.registerContentObserver(Settings.System.getUriFor(
@@ -785,7 +775,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
            resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.HOME_WAKE_SCREEN), false, this,
                     UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
+           resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAVBAR_LEFT_IN_LANDSCAPE), false, this,
                     UserHandle.USER_ALL);
             updateSettings();
@@ -1563,6 +1553,21 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mStatusBarHeight =
                 res.getDimensionPixelSize(com.android.internal.R.dimen.status_bar_height);
 
+        // Height of the navigation bar when presented horizontally at bottom
+        mNavigationBarHeightForRotation[mPortraitRotation] =
+        mNavigationBarHeightForRotation[mUpsideDownRotation] =
+                res.getDimensionPixelSize(com.android.internal.R.dimen.navigation_bar_height);
+        mNavigationBarHeightForRotation[mLandscapeRotation] =
+        mNavigationBarHeightForRotation[mSeascapeRotation] = res.getDimensionPixelSize(
+                com.android.internal.R.dimen.navigation_bar_height_landscape);
+
+        // Width of the navigation bar when presented vertically along one side
+        mNavigationBarWidthForRotation[mPortraitRotation] =
+        mNavigationBarWidthForRotation[mUpsideDownRotation] =
+        mNavigationBarWidthForRotation[mLandscapeRotation] =
+        mNavigationBarWidthForRotation[mSeascapeRotation] =
+                res.getDimensionPixelSize(com.android.internal.R.dimen.navigation_bar_width);
+
         // SystemUI (status bar) layout policy
         int shortSizeDp = shortSize * DisplayMetrics.DENSITY_DEFAULT / density;
         int longSizeDp = longSize * DisplayMetrics.DENSITY_DEFAULT / density;
@@ -1570,7 +1575,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         // Allow the navigation bar to move on small devices (phones).
         mNavigationBarCanMove = shortSizeDp < 600;
 
-      mHasNavigationBar = res.getBoolean(com.android.internal.R.bool.config_showNavigationBar);
+        mHasNavigationBar = res.getBoolean(com.android.internal.R.bool.config_showNavigationBar);
         // Allow a system property to override this. Used by the emulator.
         // See also hasNavigationBar().
         String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
@@ -1709,67 +1714,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mVolumeWakeScreen = Settings.System.getIntForUser(resolver,
                     Settings.System.VOLUME_WAKE_SCREEN, 0, UserHandle.USER_CURRENT) != 0;
 
-                    
-          // Navigation Bar Height
-        int mNavigationBarHeight = Settings.System.getIntForUser(mContext.getContentResolver(),
-           Settings.System.NAVIGATION_BAR_HEIGHT, -2, UserHandle.USER_CURRENT);
-           
-          if (mNavigationBarHeight == -2) {
-         mNavigationBarHeight = mContext.getResources().getDimensionPixelSize(
-        com.android.internal.R.dimen.navigation_bar_height);
-        
-      } else {
-      
-        mNavigationBarHeight = Converter.dpToPx(mContext, mNavigationBarHeight);
-        }
-        
-     // Navigation Bar Height Landscape
-           int mNavigationBarHeightLandscape = Settings.System.getIntForUser(mContext.getContentResolver(),
-        Settings.System.NAVIGATION_BAR_HEIGHT_LANDSCAPE, -2, UserHandle.USER_CURRENT);
-        
-        if (mNavigationBarHeightLandscape == -2) {
-           mNavigationBarHeightLandscape = mContext.getResources().getDimensionPixelSize(
-                   com.android.internal.R.dimen.navigation_bar_height_landscape);
-                   
-        } else {
-           mNavigationBarHeightLandscape = Converter.dpToPx(mContext, mNavigationBarHeightLandscape);
-         }
-         
-        // Navigation Bar Width
-            int mNavigationBarWidth = Settings.System.getIntForUser(mContext.getContentResolver(),
-                 Settings.System.NAVIGATION_BAR_WIDTH, -2, UserHandle.USER_CURRENT);
-                 
-           if (mNavigationBarWidth == -2) {
-                mNavigationBarWidth = mContext.getResources().getDimensionPixelSize(
-              com.android.internal.R.dimen.navigation_bar_width);
-              
-           } else {
-                 mNavigationBarWidth = Converter.dpToPx(mContext, mNavigationBarWidth);
-              }
-            if (!hasNavigationBar()) {
-       
-          // Set the navigation bar's dimensions to 0
-               mNavigationBarWidthForRotation[mPortraitRotation]
-                  = mNavigationBarWidthForRotation[mUpsideDownRotation]
-                  = mNavigationBarWidthForRotation[mLandscapeRotation]
-                  = mNavigationBarWidthForRotation[mSeascapeRotation]
-                  = mNavigationBarHeightForRotation[mPortraitRotation]
-                  = mNavigationBarHeightForRotation[mUpsideDownRotation]
-                  = mNavigationBarHeightForRotation[mLandscapeRotation]
-                  = mNavigationBarHeightForRotation[mSeascapeRotation] = 0;
-         } else {
-        // Height of the navigation bar when presented horizontally at bottom
-               mNavigationBarHeightForRotation[mPortraitRotation] =
-               mNavigationBarHeightForRotation[mUpsideDownRotation] = mNavigationBarHeight;
-         // Height of the navigation bar when presented horizontally when in landscape
-               mNavigationBarHeightForRotation[mLandscapeRotation] =
-               mNavigationBarHeightForRotation[mSeascapeRotation] = mNavigationBarHeightLandscape;
-          // Width of the navigation bar when presented vertically along one side
-               mNavigationBarWidthForRotation[mPortraitRotation] =
-               mNavigationBarWidthForRotation[mUpsideDownRotation] =
-               mNavigationBarWidthForRotation[mLandscapeRotation] =
-               mNavigationBarWidthForRotation[mSeascapeRotation] = mNavigationBarWidth;
-             }
+
+            mVolumeMusicControls = Settings.System.getIntForUser(resolver,
+                    Settings.System.VOLUME_MUSIC_CONTROLS, 1, UserHandle.USER_CURRENT) != 0;
 
             if (mSystemReady) {
                 int pointerLocation = Settings.System.getIntForUser(resolver,
