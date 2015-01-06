@@ -283,14 +283,6 @@ public class VanirActions {
                 }
                 break;
 
-            case ACTION_GESTURE_ACTIONS:
-                mContext.sendBroadcast(new Intent(Intent.TOGGLE_GESTURE_ACTIONS));
-                break;
-
-            case ACTION_SCREENSHOT:
-                mContext.sendBroadcast(new Intent(Intent.ACTION_SCREENSHOT));
-                break;
-
             case ACTION_SLEEP:
                 final PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
                 pm.goToSleep(SystemClock.uptimeMillis());

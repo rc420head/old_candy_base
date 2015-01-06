@@ -29,42 +29,11 @@ public class NavbarConstants {
 
     public static final int LAYOUT_IME = 666;
 
-    public static final String ACTION_APP = "**app**";
-    public static final String ACTION_BACK = "**back**";
-    public static final String ACTION_HOME = "**home**";
-    public static final String ACTION_RECENTS = "**recents**";
-    public static final String ACTION_BLANK = "**blank**";
-    public static final String ACTION_GESTURE_ACTIONS = "**gesture_actions**";
-    public static final String ACTION_SCREENSHOT = "**screenshot**";
-    public static final String ACTION_SLEEP = "**sleep**";
-    public static final String ACTION_KILL = "**kill**";
-    public static final String ACTION_LAST_APP = "**last_app**";
-    public static final String ACTION_MENU = "**menu**";
-    public static final String ACTION_NOTIFICATIONS = "**notifications**";
-    public static final String ACTION_IME = "**ime**";
-    public static final String ACTION_ASSIST = "**assist**";
-    public static final String ACTION_SEARCH = "**search**";
-    public static final String ACTION_VOICEASSIST = "**voiceassist**";
-    public static final String ACTION_RING_SILENT = "**ring_silent**";
-    public static final String ACTION_RING_VIB_SILENT = "**ring_vib_silent**";
-    public static final String ACTION_RING_VIB = "**ring_vib**";
-    public static final String ACTION_TORCH = "**torch**";
-    public static final String ACTION_LAYOUT_LEFT = "**layout_left**";
-    public static final String ACTION_LAYOUT_RIGHT = "**layout_right**";
-    public static final String ACTION_ARROW_LEFT = "**arrow_left**";
-    public static final String ACTION_ARROW_RIGHT = "**arrow_right**";
-    public static final String ACTION_ARROW_UP = "**arrow_up**";
-    public static final String ACTION_ARROW_DOWN = "**arrow_down**";
-    public static final String ACTION_IME_LAYOUT = "**ime_layout**";
-    public static final String ACTION_POWER = "**power**";
-    public static final String ACTION_NULL = "**null**";
-
 	public static final String ACTION_APP = "**app**";
 	public static final String ACTION_BACK = "**back**";
 	public static final String ACTION_HOME = "**home**";
 	public static final String ACTION_RECENTS = "**recents**";
 	public static final String ACTION_BLANK = "**blank**";
-	public static final String ACTION_GESTURE_ACTIONS = "**gesture_actions**";
 	public static final String ACTION_KILL = "**kill**";
 	public static final String ACTION_LAST_APP = "**last_app**";
 	public static final String ACTION_MENU = "**menu**";
@@ -105,7 +74,6 @@ public class NavbarConstants {
         ACTION_HOME           ("**home**",            com.android.internal.R.string.action_home,          "com.android.systemui:drawable/ic_sysbar_home"),
         ACTION_RECENTS        ("**recents**",         com.android.internal.R.string.action_recents,       "com.android.systemui:drawable/ic_sysbar_recent"),
         ACTION_BLANK          ("**blank**",           com.android.internal.R.string.action_blank,         "com.android.systemui:drawable/ic_sysbar_blank"),
-        ACTION_GESTURE_ACTIONS("**gesture_actions**", com.android.internal.R.string.gesture_actions,      "com.android.systemui:drawable/ic_sysbar_gesture"),
         ACTION_KILL           ("**kill**",            com.android.internal.R.string.action_kill,          "com.android.systemui:drawable/ic_sysbar_killtask"),
         ACTION_LAST_APP       ("**last_app**",        com.android.internal.R.string.action_last_app,      "com.android.systemui:drawable/ic_sysbar_lastapp"),
         ACTION_MENU           ("**menu**",            com.android.internal.R.string.action_menu,          "com.android.systemui:drawable/ic_sysbar_menu_big"),

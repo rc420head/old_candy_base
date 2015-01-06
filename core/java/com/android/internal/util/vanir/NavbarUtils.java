@@ -38,21 +38,21 @@ public class NavbarUtils {
 	private static final String TAG = NavbarUtils.class.getSimpleName();
 
     // These items are excluded from settings and cannot be set as targets
-    private static final NavbarConstant[] EXCLUDED_FROM_NAVBAR = {
-            NavbarConstant.ACTION_RING_SILENT,
-            NavbarConstant.ACTION_RING_VIB,
-            NavbarConstant.ACTION_RING_VIB_SILENT,
-            NavbarConstant.ACTION_NULL,
-            NavbarConstant.ACTION_POWER,
-            NavbarConstant.ACTION_LAYOUT_LEFT,
-            NavbarConstant.ACTION_LAYOUT_RIGHT,
-            NavbarConstant.ACTION_ARROW_LEFT,
-            NavbarConstant.ACTION_ARROW_RIGHT,
-            NavbarConstant.ACTION_ARROW_UP,
-            NavbarConstant.ACTION_ARROW_DOWN,
-            /* these are just not implemented yet: */
-            NavbarConstant.ACTION_TORCH
-    };
+   private static final String[] EXCLUDED_FROM_NAVBAR = {
+       ACTION_RING_SILENT,
+       ACTION_RING_VIB,
+       ACTION_RING_VIB_SILENT,
+       ACTION_NULL,
+       ACTION_POWER,
+       ACTION_LAYOUT_LEFT,
+       ACTION_LAYOUT_RIGHT,
+       ACTION_ARROW_LEFT,
+       ACTION_ARROW_RIGHT,
+       ACTION_ARROW_UP,
+       ACTION_ARROW_DOWN,
+       ACTION_TORCH,
+       ACTION_IME_LAYOUT
+     };
 
     private NavbarUtils() {
     }
@@ -83,34 +83,17 @@ public class NavbarUtils {
     }
 
     public static String[] getNavBarActions(Context context) {
-        boolean itemFound;
-        String[] mActions;
-        ArrayList<String> mActionList = new ArrayList<String>();
-        String[] mActionStart = NavbarConstants.NavbarActions();
-        int startLength = mActionStart.length;
-        int excludeLength = EXCLUDED_FROM_NAVBAR.length;
-        for (int i = 0; i < startLength; i++) {
-            itemFound = false;
-            for (int j = 0; j < excludeLength; j++) {
-                if (mActionStart[i].equals(EXCLUDED_FROM_NAVBAR[j])) {
-                    itemFound = true;
-                }
-            }
-            if (!itemFound) {
-                mActionList.add(mActionStart[i]);
-            }
-//            if (!context.getResources().getBoolean(com.android.internal.R.bool.config_enableTorch)) {
-//                mActionList.remove(ACTION_TORCH);
-//            }
+        ArrayList<String> mActionsArray = new ArrayList<String>();
+       String[] fullActionStringArray = NavbarConstants.NavbarActions();
+      // Perfection is achieved, not when there is nothing more to add,
+      // but when there is nothing left to take away. --Antoine de Saint-Exupéry, Airman's Odyssey
+         for (String action : fullActionStringArray) {
+        if (Arrays.asList(EXCLUDED_FROM_NAVBAR).contains(action)) continue;
+       mActionsArray.add(action);
         }
-        int actionSize = mActionList.size();
-        mActions = new String[actionSize];
-        for (int i = 0; i < actionSize; i++) {
-            mActions[i] = mActionList.get(i);
-        }
-        String[] mActions = new String[mActionsArray.size()];
-        mActions = mActionsArray.toArray(mActions);
-        return mActions;
+         String[] mActions = new String[mActionsArray.size()];
+     mActions = mActionsArray.toArray(mActions);
+      return mActions;
     }
 
     public static String getProperSummary(Context mContext, String uri) {

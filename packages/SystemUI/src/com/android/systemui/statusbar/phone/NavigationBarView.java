@@ -373,19 +373,6 @@ public class NavigationBarView extends LinearLayout {
         if (!force && hints == mNavigationIconHints) return;
         showingIME = (hints & StatusBarManager.NAVIGATION_HINT_BACK_ALT) != 0;
 
-        if (!mShowingImeLayout && showingIME && mNeedsNav
-                && ((mButtonLayouts > 1 && mImeLayout) || mButtonLayouts == 1)
-                && getButtonView(ACTION_BACK) == null
-                && getButtonView(ACTION_HOME) == null) {
-			mHandler.removeCallbacks(mGotStuckLayoutChange);
-            mHandler.post(mGotStuckLayoutChange);
-
-			mNavigationIconHints = hints;
-			setMenuVisibility(mShowMenu, true);
-            setDisabledFlags(mDisabledFlags, true);
-            return;
-		}
-
         if ((mNavigationIconHints & StatusBarManager.NAVIGATION_HINT_BACK_ALT) != 0 && !showingIME) {
             mTransitionListener.onBackAltCleared();
         }
@@ -417,7 +404,9 @@ public class NavigationBarView extends LinearLayout {
                     setLayoutChangerType(getButtonView(ACTION_MENU), CHANGER_RIGHT_SIDE);
                 }
             }
-
+             if (!showingIME) notifyLayoutChange(0);
+                }
+             
         if (getButtonView(ACTION_BACK) != null) {
 /*          comment this out until backbuttondrawable is properly sizing images
             ((KeyButtonView) getButtonView(ACTION_BACK)).setImageDrawable(null);
@@ -559,15 +548,20 @@ public class NavigationBarView extends LinearLayout {
                 setVisibleOrInvisible(getButtonView(ACTION_LAYOUT_RIGHT), allowLayoutArrows);
             }
         } else if (mButtonLayouts == 1) {
-            if (mLegacyMenu && mImeLayout) {
-				// show hard-coded switchers here when written
-				if (getButtonView(ACTION_IME) != null)
-				    getButtonView(ACTION_IME).setVisibility(showingIME ? View.VISIBLE : View.INVISIBLE);
-				if (getButtonView(ACTION_IME_LAYOUT) != null) getButtonView(ACTION_IME_LAYOUT)
-						.setVisibility(showingIME ? View.VISIBLE : View.INVISIBLE);
-            }
-        }
+          if (mLegacyMenu) {
+           if (mImeLayout) {
+        // show hard-coded switchers here when written
+      if (getButtonView(ACTION_IME) != null)
+          getButtonView(ACTION_IME).setVisibility(showingIME ? View.VISIBLE : View.INVISIBLE);
+      if (getButtonView(ACTION_IME_LAYOUT) != null) getButtonView(ACTION_IME_LAYOUT)
+             .setVisibility(showingIME ? View.VISIBLE : View.INVISIBLE);
+     } else {
+         if (getButtonView(ACTION_MENU) != null) getButtonView(ACTION_MENU)
+             .setVisibility(mShowMenu ? View.VISIBLE : View.INVISIBLE);
+          }
+       }
     }
+ }
 
     private void setVisibleOrInvisible(View view, boolean visible) {
         if (view != null) {
@@ -610,14 +604,16 @@ public class NavigationBarView extends LinearLayout {
         final boolean shouldShow = mShowMenu &&
                 ((mNavigationIconHints & StatusBarManager.NAVIGATION_HINT_IME_SHOWN) == 0);
 
-        if (mLegacyMenu && !showingIME) {
-
-            if (getButtonView(ACTION_LAYOUT_RIGHT) != null) {
-                ((LayoutChangerButtonView) getButtonView(ACTION_LAYOUT_RIGHT)).setMenuAction(
-                        shouldShow, getResources().getConfiguration().orientation, mTablet);
-            } else if (getButtonView(ACTION_MENU) != null) {
-                ((LayoutChangerButtonView) getButtonView(ACTION_MENU)).setMenuAction(
-                        shouldShow, getResources().getConfiguration().orientation, mTablet);
+       if (mButtonLayouts != 1) {
+        if (getButtonView(ACTION_LAYOUT_RIGHT) != null) {
+         ((LayoutChangerButtonView) getButtonView(ACTION_LAYOUT_RIGHT)).setMenuAction(
+          shouldShow, getResources().getConfiguration().orientation, mTablet);
+       } else if (getButtonView(ACTION_MENU) != null) {
+           ((LayoutChangerButtonView) getButtonView(ACTION_MENU)).setMenuAction(
+              shouldShow, getResources().getConfiguration().orientation, mTablet);
+       }
+   } else {
+         if (!mImeLayout && (getButtonView(ACTION_MENU) != null)) setVisibleOrInvisible(getButtonView(ACTION_MENU), mShowMenu);
             }
         }
     }
