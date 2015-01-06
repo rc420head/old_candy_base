@@ -603,9 +603,10 @@ public class NavigationBarView extends LinearLayout {
         // Only show Menu if IME switcher not shown.
         final boolean shouldShow = mShowMenu &&
                 ((mNavigationIconHints & StatusBarManager.NAVIGATION_HINT_IME_SHOWN) == 0);
-
-       if (mButtonLayouts != 1) {
-        if (getButtonView(ACTION_LAYOUT_RIGHT) != null) {
+                
+      if (mLegacyMenu && !showingIME) {
+           if (mButtonLayouts != 1) {
+      if (getButtonView(ACTION_LAYOUT_RIGHT) != null) {
          ((LayoutChangerButtonView) getButtonView(ACTION_LAYOUT_RIGHT)).setMenuAction(
           shouldShow, getResources().getConfiguration().orientation, mTablet);
        } else if (getButtonView(ACTION_MENU) != null) {
