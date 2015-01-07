@@ -20,6 +20,7 @@ package com.android.systemui.statusbar.phone;
 import android.animation.LayoutTransition;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -67,9 +68,10 @@ public class KeyguardStatusBarView extends RelativeLayout
 
 
     private Handler mHandler = new Handler();
-
+    private SettingsObserver mSettingsObserver;
     public KeyguardStatusBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mSettingsObserver = new SettingsObserver(mHandler);
 
     }
 
@@ -227,6 +229,7 @@ public class KeyguardStatusBarView extends RelativeLayout
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
+        mSettingsObserver.observe();
         if (visibility != View.VISIBLE) {
             mSystemIconsSuperContainer.animate().cancel();
             mMultiUserSwitch.animate().cancel();
@@ -237,5 +240,38 @@ public class KeyguardStatusBarView extends RelativeLayout
     @Override
     public boolean hasOverlappingRendering() {
         return false;
+    }
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LOCK_SCREEN_SHOW_BATTERY_PERCENT), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LOCK_SCREEN_SHOW_CARRIER), false, this);
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            update();
+        }
+
+        public void update() {
+            ContentResolver resolver = mContext.getContentResolver();
+            mShowBattreryPercent = Settings.System.getInt(
+                    resolver, Settings.System.LOCK_SCREEN_SHOW_BATTERY_PERCENT, 0) != 0;
+            mShowCarrierLabel = Settings.System.getInt(
+                    resolver, Settings.System.LOCK_SCREEN_SHOW_CARRIER, 0) != 0;
+            updateVisibilities();
+        }
     }
 }
