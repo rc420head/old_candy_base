@@ -1312,6 +1312,43 @@ public final class Settings {
         }
 
         /**
+         * Look up a boolean in the database.
+         * @param resolver to access the database with
+         * @param name to look up in the table
+         * @param def Value to return if the setting is not defined.
+         * @return The setting's current value, or 'def' if it is not defined
+         * or not a valid boolean.
+         */
+        public static boolean getBoolean(ContentResolver cr, String name, boolean def) {
+            String v = getString(cr, name);
+            try {
+                if(v != null)
+                    return "1".equals(v);
+                else
+                    return def;
+            } catch (NumberFormatException e) {
+                return def;
+            }
+        }
+
+	/**
+         * Convenience function for updating a single settings value as a
+         * boolean. This will either create a new entry in the table if the
+         * given name does not exist, or modify the value of the existing row
+         * with that name. Note that internally setting values are always
+         * stored as strings, so this function converts the given value to a
+         * string before storing it.
+         *
+         * @param cr The ContentResolver to access.
+         * @param name The name of the setting to modify.
+         * @param value The new value for the setting.
+         * @return true if the value was set, false on database errors
+         */
+        public static boolean putBoolean(ContentResolver cr, String name, boolean value) {
+            return putString(cr, name, value ? "1" : "0");
+        }
+
+        /**
          * Look up a name in the database.
          * @param resolver to access the database with
          * @param name to look up in the table
@@ -1963,6 +2000,12 @@ public final class Settings {
         public static final String LOCK_PATTERN_TACTILE_FEEDBACK_ENABLED =
             "lock_pattern_tactile_feedback_enabled";
 
+        /**
+         * Whether to scramble a pin unlock layout
+         * @hide
+         */
+        public static final String LOCKSCREEN_PIN_SCRAMBLE_LAYOUT =
+                "lockscreen_scramble_pin_layout";
 
         /**
          * A formatted string of the next alarm that is set, or the empty string
@@ -1977,6 +2020,11 @@ public final class Settings {
          * @hide
          */
         public static final String SHOW_ALARM_ICON = "show_alarm_icon";
+
+        /**
+         * @hide
+         */
+        public static final String SHOW_SU_ICON = "show_su_icon";
 
         /**
          * Scaling factor for fonts, float.
@@ -2550,22 +2598,6 @@ public final class Settings {
         */
         public static final String DEV_FORCE_SHOW_NAVBAR = "dev_force_show_navbar";
 
-         /**
-         * Navigation bar height when it is on portrait
-         * @hide
-         */
-        public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
-        /**
-        * Navigation bar height when it is on landscape
-        * @hide
-        */
-        public static final String NAVIGATION_BAR_HEIGHT_LANDSCAPE = "navigation_bar_height_landscape";
-
-        /**
-        * Navigation bar height when it is on landscape at the right
-        * @hide
-        */
-         public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
 
         /**
          * Date format string
@@ -3016,6 +3048,86 @@ public final class Settings {
         public static final String POINTER_SPEED = "pointer_speed";
 
         /**
+         *
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_BUTTONS = "navigation_bar_buttons";
+
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_HEIGHT_LANDSCAPE = "navigation_bar_height_landscape";
+
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
+
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
+
+        /**
+         * @hide
+         */
+        public static final String SOFTKEY_LONG_PRESS_CONFIGURATION = "softkey_long_press_configuration";
+
+        /**
+         * Alternate navigation bar layouts
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_ALTERNATE_LAYOUTS = "navigation_bar_alternate_layouts";
+
+        /**
+         * Alternate layout 2
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_BUTTONS_TWO = "navigation_bar_buttons_two";
+
+        /**
+         * Alternate layout 3
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_BUTTONS_THREE = "navigation_bar_buttons_three";
+
+        /**
+         * Alternate layout 4
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_BUTTONS_FOUR = "navigation_bar_buttons_four";
+
+        /**
+         * Alternate layout 5
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_BUTTONS_FIVE = "navigation_bar_buttons_five";
+
+        /**
+         * Allow navigation bar side keys
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_SIDEKEYS = "navigation_bar_sidekeys";
+
+        /**
+         * Allow navigation bar IME arrow keys
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_ARROWS = "navigation_bar_arrows";
+
+        /**
+         * Button layout for IME arrows
+         * @hide
+         */
+        public static final String NAVIGATION_IME_LAYOUT = "navigation_ime_layout";
+
+        /**
+         * Toggle for navigation ring
+         * @hide
+         */
+        public static final String ENABLE_NAVIGATION_RING = "enable_navigation_ring";
+
+        /**
          * Whether lock-to-app will be triggered by long-press on recents.
          * @hide
          */
@@ -3377,6 +3489,7 @@ public final class Settings {
          */
         public static final String VOICE_LAUNCH_INTENT = "voice_launch_intent";
 
+
         /**
          * Whether to use gesture anywhere feature.
          * @hide
@@ -3428,11 +3541,66 @@ public final class Settings {
         @ChaosLab(name="GestureAnywhere", classification=Classification.NEW_FIELD)
         public static final String GESTURE_ANYWHERE_SHOW_TRIGGER = "gesture_anywhere_show_trigger";
         
+        /**  
+         * AOKP Custom System Animations
+         * @hide
+         */  
+        public static final String[] ACTIVITY_ANIMATION_CONTROLS = new String[] {
+                "activity_open",
+                "activity_close",
+                "task_open",
+                "task_close",
+                "task_to_front",
+                "task_to_back",
+                "wallpaper_open",
+                "wallpaper_close",
+                "wallpaper_intra_open",
+                "wallpaper_intra_close",
+                "task_open_behind",
+        };  
+        public static final String ANIMATION_CONTROLS_DURATION = "animation_controls_duration";
+
         /**
          * Whether navigation bar is placed on the left side in landscape mode
          * @hide
          */
         public static final String NAVBAR_LEFT_IN_LANDSCAPE = "navigation_bar_left";
+
+
+        /**
+         * ListView Animations
+         * 0 == None
+         * 1 == Wave (Left)
+         * 2 == Wave (Right)
+         * 3 == Scale
+         * 4 == Alpha
+         * 5 == Stack (Top)
+         * 6 == Stack (Bottom)
+         * 7 == Translate (Left)
+         * 8 == Translate (Right)
+         * @hide
+         */
+        public static final String LISTVIEW_ANIMATION = "listview_animation";
+
+        /**
+         * ListView Interpolators
+         * 0 == None
+         * 1 == accelerate_interpolator
+         * 2 == decelerate_interpolator
+         * 3 == accelerate_decelerate_interpolator
+         * 4 == anticipate_interpolator
+         * 5 == overshoot_interpolator
+         * 6 == anticipate_overshoot_interpolator
+         * 7 == bounce_interpolator
+         * @hide
+         */
+        public static final String LISTVIEW_INTERPOLATOR = "listview_interpolator";
+
+        /**
+         * Locale for secondary overlay on dialer for t9 search input
+         * @hide
+         */
+        public static final String T9_SEARCH_INPUT_LOCALE = "t9_search_input_locale";
 
 
         /**

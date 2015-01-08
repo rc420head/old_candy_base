@@ -1017,6 +1017,9 @@ public abstract class BaseStatusBar extends SystemUI implements
     public void onHeadsUpDismissed(boolean direction) {
     }
 
+    public void notifyLayoutChange(int direction) { }
+    public void setHomeActionListener() { }
+
     @Override
     public void showRecentApps(boolean triggeredFromAltTab) {
         int msg = MSG_SHOW_RECENT_APPS;

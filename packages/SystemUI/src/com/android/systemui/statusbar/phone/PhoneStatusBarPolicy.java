@@ -47,6 +47,7 @@ import com.android.internal.telephony.TelephonyIntents;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.policy.CastController;
 import com.android.systemui.statusbar.policy.CastController.CastDevice;
+import com.android.systemui.statusbar.policy.SuController;
 
 /**
  * This class contains all of the policy about which icons are installed in the status
@@ -67,6 +68,7 @@ public class PhoneStatusBarPolicy {
     private static final String SLOT_VOLUME = "volume";
     private static final String SLOT_CDMA_ERI = "cdma_eri";
     private static final String SLOT_ALARM_CLOCK = "alarm_clock";
+    private static final String SLOT_SU = "su";
 
     private static final String SDCARD_ABSENT = "sdcard_absent";
     private static final String SDCARD_KEYWORD = "SD";
@@ -75,7 +77,9 @@ public class PhoneStatusBarPolicy {
     private final StatusBarManager mService;
     private final Handler mHandler = new Handler();
     private final CastController mCast;
+    private final SuController mSuController;
     private boolean mAlarmIconVisible;
+    private boolean mSuIconVisible;
 
     // Assume it's all good unless we hear otherwise.  We don't always seem
     // to get broadcasts that it *is* there.
@@ -118,9 +122,10 @@ public class PhoneStatusBarPolicy {
         }
     };
 
-    public PhoneStatusBarPolicy(Context context, CastController cast) {
+    public PhoneStatusBarPolicy(Context context, CastController cast, SuController su) {
         mContext = context;
         mCast = cast;
+        mSuController = su;
         mService = (StatusBarManager)context.getSystemService(Context.STATUS_BAR_SERVICE);
 
         // listen for broadcasts
@@ -187,18 +192,29 @@ public class PhoneStatusBarPolicy {
         mService.setIconVisibility(SLOT_CAST, false);
         mCast.addCallback(mCastCallback);
 
-        mAlarmIconObserver.onChange(true);
+        // su
+        mService.setIcon(SLOT_SU, R.drawable.stat_sys_su, 0, null);
+        mService.setIconVisibility(SLOT_SU, false);
+        mSuController.addCallback(mSuCallback);
+
+        mIconObserver.onChange(true);
         mContext.getContentResolver().registerContentObserver(
                 Settings.System.getUriFor(Settings.System.SHOW_ALARM_ICON),
-                false, mAlarmIconObserver);
+                false, mIconObserver);
+        mContext.getContentResolver().registerContentObserver(
+                Settings.System.getUriFor(Settings.System.SHOW_SU_ICON),
+                false, mIconObserver);
     }
 
-    private ContentObserver mAlarmIconObserver = new ContentObserver(null) {
+    private final ContentObserver mIconObserver = new ContentObserver(null) {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             mAlarmIconVisible = Settings.System.getInt(mContext.getContentResolver(),
                     Settings.System.SHOW_ALARM_ICON, 1) == 1;
+            mSuIconVisible = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.SHOW_SU_ICON, 1) == 1;
             updateAlarm();
+            updateSu();
         }
 
         @Override
@@ -385,10 +401,22 @@ public class PhoneStatusBarPolicy {
         mService.setIconVisibility(SLOT_CAST, isCasting);
     }
 
+    private void updateSu() {
+        mService.setIconVisibility(SLOT_SU, mSuIconVisible && mSuController.hasActiveSessions());
+    }
+
     private final CastController.Callback mCastCallback = new CastController.Callback() {
         @Override
         public void onCastDevicesChanged() {
             updateCast();
         }
     };
+
+    private final SuController.Callback mSuCallback = new SuController.Callback() {
+        @Override
+        public void onSuSessionsChanged() {
+            updateSu();
+        }
+    };
+
 }
