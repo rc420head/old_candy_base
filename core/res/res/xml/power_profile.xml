@@ -28,42 +28,93 @@
        significantly, so should be measured on the shipping platform
        with a power meter. -->
   <item name="none">0</item>
-  <item name="screen.on">0.1</item>  <!-- ~200mA -->
-  <item name="screen.full">0.1</item>  <!-- ~300mA -->
-  <item name="bluetooth.active">0.1</item> <!-- Bluetooth data transfer, ~10mA -->
-  <item name="bluetooth.on">0.1</item>  <!-- Bluetooth on & connectable, but not connected, ~0.1mA -->
-  <item name="wifi.on">0.1</item>  <!-- ~3mA -->
-  <item name="wifi.active">0.1</item>  <!-- WIFI data transfer, ~200mA -->
-  <item name="wifi.scan">0.1</item>  <!-- WIFI network scanning, ~100mA -->
-  <item name="dsp.audio">0.1</item> <!-- ~10mA -->
-  <item name="dsp.video">0.1</item> <!-- ~50mA -->
-  <item name="radio.active">0.1</item> <!-- ~200mA -->
-  <item name="radio.scanning">0.1</item> <!-- cellular radio scanning for signal, ~10mA -->
-  <item name="gps.on">0.1</item> <!-- ~50mA -->
-  <!-- Current consumed by the radio at different signal strengths, when paging -->
-  <array name="radio.on"> <!-- Strength 0 to BINS-1 -->
-      <value>0.2</value> <!-- ~2mA -->
-      <value>0.1</value> <!-- ~1mA -->
+  <item name="screen.on">18</item>  <!-- ~200mA -->
+  <item name="screen.full">154.8</item>  <!-- ~300mA -->
+  <array name="screen.brightness">
+      <value>dark</value>
+      <value>dim</value>
+      <value>medium</value>
+      <value>light</value>
+      <value>bright</value>
   </array>
+  <array name="screen.brightness_bin">
+      <value>52.2</value>
+      <value>86.04</value>
+      <value>120.96</value>
+      <value>154.80</value>
+  </array>
+  <array name="gpu.speeds">
+      <value>27000</value>
+      <value>200000</value>
+      <value>320000</value>
+      <value>400000</value>
+  <array name="gpu.active">
+  </array>
+      <value>102.6</value>
+      <value>406.8</value>
+      <value>525.6</value>
+      <value>626.4</value>
+  </array>
+  <item name="bluetooth.active">25.2</item> <!-- Bluetooth data transfer, ~10mA -->
+  <item name="bluetooth.on">1.8</item>  <!-- Bluetooth on & connectable, but not connected, ~0.1mA -->
+  <item name="wifi.on">1.14</item>  <!-- ~3mA -->
+  <item name="wifi.active">74</item>  <!-- WIFI data transfer, ~200mA -->
+  <item name="wifi.scan">54</item>  <!-- WIFI network scanning, ~100mA -->
+  <item name="dsp.audio">10.8</item> <!-- ~10mA -->
+  <item name="dsp.video">39.6</item> <!-- ~50mA -->
+  <item name="radio.talk">96.12</item> <!-- ~200mA -->
+  <item name="radio.active">191</item> <!-- ~200mA -->
+  <item name="radio.scanning">82</item> <!-- cellular radio scanning for signal, ~10mA -->
+  <item name="gps.on">50.4</item> <!-- ~50mA -->
+  <!-- Current consumed by the radio at different signal strengths, when paging -->
+  <item name="radio.on">2.88</item> <!-- ~50mA -->
   <!-- Different CPU speeds as reported in
        /sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state -->
   <array name="cpu.speeds">
-      <value>400000</value> <!-- 400 MHz CPU speed -->
+      <value>300000</value> <!-- MHz CPU speed -->
+      <value>422400</value> <!-- MHz CPU speed -->
+      <value>652800</value> <!-- MHz CPU speed -->
+      <value>729600</value> <!-- MHz CPU speed -->
+      <value>883200</value> <!-- MHz CPU speed -->
+      <value>960000</value> <!-- MHz CPU speed -->
+      <value>1036800</value> <!-- MHz CPU speed -->
+      <value>1190400</value> <!-- MHz CPU speed -->
+      <value>1267200</value> <!-- MHz CPU speed -->
+      <value>1497600</value> <!-- MHz CPU speed -->
+      <value>1574400</value> <!-- MHz CPU speed -->
+      <value>1728000</value> <!-- MHz CPU speed -->
+      <value>1958400</value> <!-- MHz CPU speed -->
+      <value>2265600</value> <!-- MHz CPU speed -->
   </array>
   <!-- Current when CPU is idle -->
-  <item name="cpu.idle">0.1</item>
+  <item name="cpu.idle">2.52</item>
+  <item name="cpu.awake">9.08</item>
   <!-- Current at each CPU speed, as per 'cpu.speeds' -->
   <array name="cpu.active">
-      <value>0.1</value>  <!-- ~100mA -->
+      <value>23.92</value>
+      <value>32.32</value>
+      <value>38.2</value>
+      <value>40.8</value>
+      <value>49.66</value>
+      <value>82.23</value>
+      <value>86.12</value>
+      <value>98.48</value>
+      <value>109.48</value>
+      <value>189.12</value>
+      <value>213.29</value>
+      <value>299.75</value>
+      <value>361.27</value>
+      <value>534.39</value>
   </array>
   <!-- This is the battery capacity in mAh (measured at nominal voltage) -->
-  <item name="battery.capacity">1000</item>
+  <item name="battery.capacity">2600</item>
 
   <array name="wifi.batchedscan"> <!-- mA -->
-      <value>.0002</value> <!-- 1-8/hr -->
-      <value>.002</value>  <!-- 9-64/hr -->
-      <value>.02</value>   <!-- 65-512/hr -->
-      <value>.2</value>    <!-- 513-4,096/hr -->
+      <value>0.0002</value> <!-- 1-8/hr -->
+      <value>0.002</value>  <!-- 9-64/hr -->
+      <value>0.02</value>   <!-- 65-512/hr -->
+      <value>0.2</value>    <!-- 513-4,096/hr -->
       <value>2</value>    <!-- 4097-/hr -->
+      <value>8</value>    <!-- ????-/hr -->
   </array>
 </device>
