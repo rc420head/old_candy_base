@@ -48,8 +48,8 @@
       <value>200000</value>
       <value>320000</value>
       <value>400000</value>
-  <array name="gpu.active">
   </array>
+  <array name="gpu.active">
       <value>102.6</value>
       <value>406.8</value>
       <value>525.6</value>
